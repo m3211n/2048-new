@@ -1,6 +1,66 @@
 namespace SpriteKind {
     export const Tile = SpriteKind.create()
 }
+function getRow (index: number) {
+    tmpList = []
+    for (let i = 0; i <= 3; i++) {
+        tmpList.push(tilesNumbers[i + index])
+    }
+    return tmpList
+}
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    for (let i = 0; i <= 3; i++) {
+        myList = getCol(i)
+        myList = compressList(myList)
+        putCol(i, myList)
+        drawTiles()
+    }
+})
+function getCol (index: number) {
+    tmpList = []
+    for (let i = 0; i <= 3; i++) {
+        tmpList.push(tilesNumbers[i * 4 + index])
+    }
+    return tmpList
+}
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    for (let i = 0; i <= 3; i++) {
+        myList = getRow(i)
+        myList = compressList(myList)
+        putRow(i, myList)
+        drawTiles()
+    }
+})
+function putRow (index: number, row: number[][]) {
+    for (let i = 0; i <= 3; i++) {
+        tilesNumbers[i + index] = row.removeAt(0)
+    }
+}
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    for (let i = 0; i <= 3; i++) {
+        myList = getRow(i)
+        myList.reverse()
+        myList = compressList(myList)
+        myList.reverse()
+        putRow(i, myList)
+        drawTiles()
+    }
+})
+function putCol (index: number, col: number[][]) {
+    for (let i = 0; i <= 3; i++) {
+        tilesNumbers[i * 4 + index] = col.removeAt(0)
+    }
+}
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+    for (let i = 0; i <= 3; i++) {
+        myList = getCol(i)
+        myList.reverse()
+        myList = compressList(myList)
+        myList.reverse()
+        putCol(i, myList)
+        drawTiles()
+    }
+})
 function createTiles () {
     tilesImages = [
     assets.image`tile0`,
@@ -23,22 +83,49 @@ function createTiles () {
         tilesSprites.push(sprites.create(tilesImages[tmpValue], SpriteKind.Tile))
     }
 }
+function compressList (list: number[][]) {
+    tmpList = list
+    // clean out 0's between numbers
+    for (let i = 0; i <= 3; i++) {
+        if (tmpList[i] == 0) {
+            tmpList.removeAt(i)
+            tmpList.push(0)
+        }
+    }
+    // compress values if needed
+    for (let i = 0; i <= 2; i++) {
+        if (tmpList[i] == tmpList[i + 1]) {
+            tmpList[i] = tmpList[i] + 1
+            tmpList[i + 1] = 0
+        }
+    }
+    // clean up 0's again
+    for (let i = 0; i <= 3; i++) {
+        if (tmpList[i] == 0) {
+            tmpList.removeAt(i)
+            tmpList.push(0)
+        }
+    }
+    return tmpList
+}
 function drawTiles () {
     for (let currentIndex = 0; currentIndex <= 15; currentIndex++) {
-        X = X0 + currentIndex % 4 * 24
-        Y = Y0 + Math.floor(currentIndex / 4) * 24
+        X = X_start + currentIndex % 4 * 24
+        Y = Y_start + Math.floor(currentIndex / 4) * 24
         tilesSprites[currentIndex].setImage(tilesImages[tilesNumbers[currentIndex]])
         tilesSprites[currentIndex].setPosition(X, Y)
     }
 }
-let Y = 0
-let X = 0
+let Y: number[] = []
+let X: number[] = []
 let tilesSprites: Sprite[] = []
-let tmpValue = 0
-let tilesNumbers: number[] = []
+let tmpValue: number[] = []
 let tilesImages: Image[] = []
-let Y0 = 0
-let X0 = 0
+let myList: number[][] = []
+let tilesNumbers: number[][] = []
+let tmpList: number[][] = []
+let Y_start: number[] = []
+let X_start: number[] = []
 scene.setBackgroundImage(img`
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
@@ -162,6 +249,6 @@ scene.setBackgroundImage(img`
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     `)
 createTiles()
-X0 = scene.screenWidth() / 2 - 36
-Y0 = scene.screenHeight() / 2 - 36
+X_start = 44
+Y_start = 24
 drawTiles()
