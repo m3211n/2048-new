@@ -1,66 +1,37 @@
 namespace SpriteKind {
     export const Tile = SpriteKind.create()
 }
-function getRow (index: number) {
-    tmpList = []
-    for (let i = 0; i <= 3; i++) {
-        tmpList.push(tilesNumbers[i + index])
-    }
-    return tmpList
+function add1 () {
+	
 }
-controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    for (let j = 0; j <= 3; j++) {
-        myList = getCol(j)
-        myList = compressList(myList)
-        putCol(j, myList)
-        drawTiles()
+function optimizeList (list: number[]) {
+    newList = list
+    i0 = 0
+    i1 = 1
+    for (let index = 0; index < 3; index++) {
+        if (newList[i0] != 0) {
+            if (newList[i1] != 0) {
+                if (newList[i0] == newList[i1]) {
+                    newList[i0] = newList[i0] + 1
+                    newList.removeAt(i1)
+                    newList.push(0)
+                }
+                i0 += 1
+                i1 += 1
+            } else {
+                newList.removeAt(i1)
+                newList.push(0)
+            }
+        } else {
+            newList.removeAt(i0)
+            newList.push(0)
+        }
+        console.logValue("i0", i0)
+        console.logValue("i1", i1)
+        console.logValue("list", newList)
     }
-})
-function getCol (index: number) {
-    tmpList = []
-    for (let k = 0; k <= 3; k++) {
-        tmpList.push(tilesNumbers[k * 4 + index])
-    }
-    return tmpList
+    return newList
 }
-controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
-    for (let l = 0; l <= 3; l++) {
-        myList = getRow(l)
-        myList = compressList(myList)
-        putRow(l, myList)
-        drawTiles()
-    }
-})
-function putRow (index: number, row: number[]) {
-    for (let m = 0; m <= 3; m++) {
-        tilesNumbers[m + index] = row.removeAt(0)
-    }
-}
-controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
-    for (let n = 0; n <= 3; n++) {
-        myList = getRow(n)
-        myList.reverse()
-        myList = compressList(myList)
-        myList.reverse()
-        putRow(n, myList)
-        drawTiles()
-    }
-})
-function putCol (index: number, col: number[]) {
-    for (let o = 0; o <= 3; o++) {
-        tilesNumbers[o * 4 + index] = col.removeAt(0)
-    }
-}
-controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
-    for (let p = 0; p <= 3; p++) {
-        myList = getCol(p)
-        myList.reverse()
-        myList = compressList(myList)
-        myList.reverse()
-        putCol(p, myList)
-        drawTiles()
-    }
-})
 function createTiles () {
     tilesImages = [
     assets.image`tile0`,
@@ -76,57 +47,47 @@ function createTiles () {
     assets.image`tile10`,
     assets.image`tile11`
     ]
-    tilesNumbers = []
     for (let index = 0; index < 16; index++) {
-        tmpValue = 0
-        tilesNumbers.push(tmpValue)
-        tilesSprites.push(sprites.create(tilesImages[tmpValue], SpriteKind.Tile))
+        tilesNumbers.push(0)
+        tilesSprites.push(sprites.create(tilesImages[0], SpriteKind.Tile))
     }
-}
-function compressList (list: number[]) {
-    tmpList = list
-    // clean out 0's between numbers
-    for (let q = 0; q <= 3; q++) {
-        if (tmpList[q] == 0) {
-            tmpList.removeAt(q)
-            tmpList.push(0)
-        }
-    }
-    // compress values if needed
-    for (let r = 0; r <= 2; r++) {
-        if (tmpList[r] == tmpList[r + 1]) {
-            tmpList[r] = tmpList[r] + 1
-            tmpList[r + 1] = 0
-        }
-    }
-    // clean up 0's again
-    for (let s = 0; s <= 3; s++) {
-        if (tmpList[s] == 0) {
-            tmpList.removeAt(s)
-            tmpList.push(0)
-        }
-    }
-    return tmpList
 }
 function drawTiles () {
-    for (let currentIndex = 0; currentIndex <= 15; currentIndex++) {
-        X = X_start + currentIndex % 4 * 24
-        Y = Y_start + Math.floor(currentIndex / 4) * 24
-        tilesSprites[currentIndex].setImage(tilesImages[tilesNumbers[currentIndex]])
-        tilesSprites[currentIndex].setPosition(X, Y)
+    for (let i0 = 0; i0 <= 15; i0++) {
+        X = X_start + i0 % 4 * 24
+        Y = Y_start + Math.floor(i0 / 4) * 24
+        tilesSprites[i0].setImage(tilesImages[tilesNumbers[i0]])
+        tilesSprites[i0].setPosition(X, Y)
     }
 }
+function getList (position: number, isRow: boolean) {
+    newList = [
+    0,
+    0,
+    0,
+    0
+    ]
+    for (let i1 = 0; i1 <= 3; i1++) {
+        if (isRow) {
+            newList[i1] = tilesNumbers[position * 4 + i1]
+        } else {
+            newList[i1] = tilesNumbers[i1 * 4 + position]
+        }
+    }
+    return newList
+}
+let Y = 0
+let X = 0
 let tilesSprites: Sprite[] = []
 let tilesImages: Image[] = []
-let myList: number[] = []
+let i1 = 0
+let i0 = 0
+let newList: number[] = []
 let tilesNumbers: number[] = []
-let tmpList: number[] = []
-let Y: number
-let X: number
-let tmpValue: number
-let Y_start: number
-let X_start: number
+let Y_start = 0
+let X_start = 0
 X_start = 44
 Y_start = 24
+tilesNumbers = []
 createTiles()
 drawTiles()
