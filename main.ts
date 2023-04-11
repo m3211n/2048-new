@@ -2,7 +2,13 @@ namespace SpriteKind {
     export const Tile = SpriteKind.create()
 }
 function add1 () {
-	
+    zerosIndexes = []
+    for (let n1 = 0; n1 <= tilesNumbers.length - 1; n1++) {
+        if (tilesNumbers[n1] == 0) {
+            zerosIndexes.push(n1)
+        }
+    }
+    tilesNumbers[zerosIndexes._pickRandom()] = 1
 }
 function optimizeList (list: number[]) {
     newList = list
@@ -83,6 +89,7 @@ let tilesImages: Image[] = []
 let i1 = 0
 let i0 = 0
 let newList: number[] = []
+let zerosIndexes: number[] = []
 let tilesNumbers: number[] = []
 let Y_start = 0
 let X_start = 0
@@ -90,4 +97,7 @@ X_start = 44
 Y_start = 24
 tilesNumbers = []
 createTiles()
+add1()
+add1()
+console.log(tilesNumbers)
 drawTiles()
