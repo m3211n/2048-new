@@ -4,7 +4,7 @@ namespace SpriteKind {
 
 function add1 () {
     zerosIndexes = []
-    for (let n = 0; n1 < tilesNumbers.length; n++) {
+    for (let n = 0; n < tilesNumbers.length; n++) {
         if (tilesNumbers[n] == 0) {
             zerosIndexes.push(n)
         }
@@ -36,17 +36,13 @@ function optimizeBufferList () {
             bufferList.push(0)
         }
     }
-    if (bufferList. != bufferSnapshot) { 
-        isOptimized = true
-        console.log("isOptimized = " + isOptimized)
-    }
 }
 
 function drawTiles () {
     let X = 0
     let Y = 0
     for (let i = 0; i <= 15; i++) {
-        X = X_start + i0 % 4 * 24
+        X = X_start + i % 4 * 24
         Y = Y_start + Math.floor(i / 4) * 24
         tilesSprites[i].setImage(tilesImages[tilesNumbers[i]])
         tilesSprites[i].setPosition(X, Y)
