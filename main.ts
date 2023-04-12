@@ -33,9 +33,6 @@ function optimizeBufferList () {
             bufferList.removeAt(i0)
             bufferList.push(0)
         }
-        console.logValue("i0", i0)
-        console.logValue("i1", i1)
-        console.logValue("list", bufferList)
     }
 }
 
@@ -59,6 +56,7 @@ function createTiles () {
         tilesSprites.push(sprites.create(tilesImages[0], SpriteKind.Tile))
     }
 }
+
 function drawTiles () {
     for (let i0 = 0; i0 <= 15; i0++) {
         X = X_start + i0 % 4 * 24
@@ -67,6 +65,7 @@ function drawTiles () {
         tilesSprites[i0].setPosition(X, Y)
     }
 }
+
 function getBufferList (position: number, isRow: boolean) {
     bufferList = [0, 0, 0, 0]
     for (let i1 = 0; i1 <= 3; i1++) {
@@ -122,11 +121,11 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function() {
 
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     for (i2 = 0; i2 <= 3; i2++) {
-        getBufferList(i2, true)
+        getBufferList(i2, false)
         bufferList.reverse()
         optimizeBufferList()
         bufferList.reverse()
-        putBufferList(i2, true)
+        putBufferList(i2, false)
     }
     drawTiles()
     add1()
@@ -139,8 +138,8 @@ let tilesImages: Image[] = []
 let i2 = 0
 let i1 = 0
 let i0 = 0
-let newList: number[] = []
-let testList: number[] = []
+//let newList: number[] = []
+//let testList: number[] = []
 let bufferList: number[] = []
 let zerosIndexes: number[] = []
 let tilesNumbers: number[] = []
@@ -152,5 +151,4 @@ tilesNumbers = []
 createTiles()
 add1()
 add1()
-console.log(tilesNumbers)
 drawTiles()
