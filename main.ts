@@ -12,6 +12,10 @@ function add1 () {
     tilesNumbers[zerosIndexes._pickRandom()] = 1
 }
 
+function shiftTiles (direction: number) {
+
+}
+
 function optimizeBufferList () {
     let i0 = 0
     let i1 = 1
@@ -36,16 +40,22 @@ function optimizeBufferList () {
             bufferList.push(0)
         }
     }
+    isOptimized = false
+    for (let i = 0; i < bufferList.length; i++) {
+        if (bufferList[i] != bufferSnapshot[i]) {
+            isOptimized = true
+        }
+    }
 }
 
 function drawTiles () {
-    let X = 0
-    let Y = 0
+    let x = 0
+    let y = 0
     for (let i = 0; i <= 15; i++) {
-        X = X_start + i % 4 * 24
-        Y = Y_start + Math.floor(i / 4) * 24
+        x = x_start + i % 4 * 24
+        y = y_start + Math.floor(i / 4) * 24
         tilesSprites[i].setImage(tilesImages[tilesNumbers[i]])
-        tilesSprites[i].setPosition(X, Y)
+        tilesSprites[i].setPosition(x, y)
     }
 }
 
@@ -132,6 +142,11 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
 //let newList: number[] = []
 //let testList: number[] = []
 
+let _top = 0
+let _right = 3
+let _bottom = 6
+let _left = 9
+
 let tilesNumbers: number[] = [
     0, 0, 0, 0, 
     0, 0, 0, 0, 
@@ -164,8 +179,8 @@ let bufferList: number[] = []
 let isOptimized = false
 let zerosIndexes: number[] = []
 
-let Y_start = 44
-let X_start = 24
+let x_start = 44
+let y_start = 24
 
 add1()
 add1()
