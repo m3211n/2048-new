@@ -45,7 +45,7 @@ function shiftTiles (direction: number) {
         for (let index = 0; index < 3; index++) {
             if (segment[i0] != 0) {
                 if (segment[i1] != 0) {
-                    if (segment[i0] == segment[i1]) {
+                    if (segment[i0] == segment[i1]) {       // if two similar numbers then merge
                         segment[i0] = segment[i0] + 1
                         segment.removeAt(i1)
                         segment.push(0)
@@ -87,18 +87,15 @@ function shiftTiles (direction: number) {
     // if the array was modified (at least one of segments was changed) then we need to seed new tile with "1" and tiles has to be re-drawn 
     if (isModified) {
         add1()
-        drawTiles()
+        updateTilesSprites()
     }
 }
 
-function drawTiles () {
-    let x = 0
-    let y = 0
+function updateTilesSprites () {
     for (let i = 0; i <= 15; i++) {
-        x = x_start + i % 4 * 30
-        y = y_start + Math.floor(i / 4) * 30
-        tilesSprites[i].setImage(tilesImages[tilesNumbers[i]])
-        tilesSprites[i].setPosition(x, y)
+        if (tilesSprites[i].image != tilesImages[tilesNumbers[i]]) {
+            tilesSprites[i].setImage(tilesImages[tilesNumbers[i]])
+        }
     }
 }
 
@@ -118,15 +115,41 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     shiftTiles(_DOWN)
 })
 
+game.onUpdateInterval(500, function() {
+
+    if (tilesNumbers.indexOf(11) != -1) {                 // WIN if reached 2048
+        game.gameOver(true) 
+    }
+
+    if (tilesNumbers.indexOf(0) == -1) {                  // if there's no empty cells
+        
+        let possibleMoves = false;
+        
+        for (let i = 0; i <= 3; i++) {                      // find numbers with equal neighbours
+            for (let j = 0; j <= 3; j++) {
+                let i0 = i * 4 + j                          // tagret index
+                let i_right = i0 + 1                        // index of the neighbour to the right
+                let i_down = i0 + 4                         // index of the neighbour to the bottom
+                if ((i_right % 4) != 0 && (i_down <= 15)) { // limiting to the box
+                    if (tilesNumbers[i0] == tilesNumbers[i_right] || tilesNumbers[i0] == tilesNumbers[i_down]) {
+                        possibleMoves = true;
+                    }
+                } 
+            }
+        }
+
+        if (!possibleMoves) {
+            game.gameOver(false)
+        }
+
+    }
+    
+})
+
 const _UP = 0                // direction constants
 const _RIGHT = 3
 const _DOWN = 6
 const _LEFT = 9
-
-let _top = 0
-let _right = 3
-let _bottom = 6
-let _left = 9
 
 let tilesNumbers: number[] = [
     0, 0, 0, 0, 
@@ -152,17 +175,19 @@ let tilesImages: Image[] = [
 
 let tilesSprites: Sprite[] = []
 
-for (let index = 0; index < 16; index++) {
-    tilesSprites.push(sprites.create(tilesImages[0], SpriteKind.Tile))
-}
-
 let isModified = false
 let zerosIndexes: number[] = []
 
 let x_start = 35
 let y_start = 15
 
+// create and position tiles
+for (let i = 0; i <= 15; i++) {
+    tilesSprites.push(sprites.create(tilesImages[0], SpriteKind.Tile))
+    tilesSprites[i].setPosition(x_start + i % 4 * 30, y_start + Math.floor(i / 4) * 30)
+}
+
 add1()
 add1()
 
-drawTiles()
+updateTilesSprites()
