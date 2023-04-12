@@ -49,6 +49,7 @@ function shiftTiles (direction: number) {
                         segment[i0] = segment[i0] + 1
                         segment.removeAt(i1)
                         segment.push(0)
+                        info.changeScoreBy(1)
                     }
                     i0 += 1
                     i1 += 1
