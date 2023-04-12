@@ -45,7 +45,7 @@ function shiftTiles (direction: number) {
         for (let index = 0; index < 3; index++) {
             if (segment[i0] != 0) {
                 if (segment[i1] != 0) {
-                    if (segment[i0] == segment[i1]) {
+                    if (segment[i0] == segment[i1]) {       // if two similar numbers then merge
                         segment[i0] = segment[i0] + 1
                         segment.removeAt(i1)
                         segment.push(0)
@@ -117,8 +117,31 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
 
 game.onUpdateInterval(500, function() {
 
-    if (tilesNumbers.indexOf(11) != null) {
+    if (tilesNumbers.indexOf(11) != -1) {                 // WIN if reached 2048
         game.gameOver(true) 
+    }
+
+    if (tilesNumbers.indexOf(0) == -1) {                  // if there's no empty cells
+        
+        let possibleMoves = false;
+        
+        for (let i = 0; i <= 3; i++) {                      // find numbers with equal neighbours
+            for (let j = 0; j <= 3; j++) {
+                let i0 = i * 4 + j                          // tagret index
+                let i_right = i0 + 1                        // index of the neighbour to the right
+                let i_down = i0 + 4                         // index of the neighbour to the bottom
+                if ((i_right % 4) != 0 && (i_down <= 15)) { // limiting to the box
+                    if (tilesNumbers[i0] == tilesNumbers[i_right] || tilesNumbers[i0] == tilesNumbers[i_down]) {
+                        possibleMoves = true;
+                    }
+                } 
+            }
+        }
+
+        if (!possibleMoves) {
+            game.gameOver(false)
+        }
+
     }
     
 })
