@@ -4,7 +4,7 @@ namespace SpriteKind {
 
 function add1 () {
     zerosIndexes = []
-    for (let n = 0; n1 <= tilesNumbers.length - 1; n++) {
+    for (let n = 0; n1 < tilesNumbers.length; n++) {
         if (tilesNumbers[n] == 0) {
             zerosIndexes.push(n)
         }
@@ -15,6 +15,8 @@ function add1 () {
 function optimizeBufferList () {
     let i0 = 0
     let i1 = 1
+    let bufferSnapshot: number[] = []
+    bufferSnapshot = bufferList
     for (let index = 0; index < 3; index++) {
         if (bufferList[i0] != 0) {
             if (bufferList[i1] != 0) {
@@ -34,26 +36,9 @@ function optimizeBufferList () {
             bufferList.push(0)
         }
     }
-}
-
-function createTiles () {
-    tilesImages = [
-    assets.image`tile0`,
-    assets.image`tile1`,
-    assets.image`tile2`,
-    assets.image`tile3`,
-    assets.image`tile4`,
-    assets.image`tile5`,
-    assets.image`tile6`,
-    assets.image`tile7`,
-    assets.image`tile8`,
-    assets.image`tile9`,
-    assets.image`tile10`,
-    assets.image`tile11`
-    ]
-    for (let index = 0; index < 16; index++) {
-        tilesNumbers.push(0)
-        tilesSprites.push(sprites.create(tilesImages[0], SpriteKind.Tile))
+    if (bufferList. != bufferSnapshot) { 
+        isOptimized = true
+        console.log("isOptimized = " + isOptimized)
     }
 }
 
@@ -90,16 +75,20 @@ function putBufferList (position: number, isRow: boolean) {
 }
 
 controller.left.onEvent(ControllerButtonEvent.Pressed, function() {
+    isOptimized = false
     for (let i = 0; i <= 3; i++) {
         getBufferList(i, true)
         optimizeBufferList()
         putBufferList(i, true)
     }
-    drawTiles()
-    add1()
+    if (isOptimized) {
+        add1()
+        drawTiles()
+    }
 })
 
 controller.right.onEvent(ControllerButtonEvent.Pressed, function() {
+    isOptimized = false
     for (let i = 0; i <= 3; i++) {
         getBufferList(i, true)
         bufferList.reverse()
@@ -107,21 +96,27 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function() {
         bufferList.reverse()
         putBufferList(i, true)
     }
-    drawTiles()
-    add1()
+    if (isOptimized) {
+        add1()
+        drawTiles()
+    }
 })
 
 controller.up.onEvent(ControllerButtonEvent.Pressed, function() {
+    isOptimized = false
     for (let i = 0; i <= 3; i++) {
         getBufferList(i, false)
         optimizeBufferList()
         putBufferList(i, false)
     }
-    drawTiles()
-    add1()
+    if (isOptimized) {
+        add1()
+        drawTiles()
+    }
 })
 
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+    isOptimized = false
     for (let i = 0; i <= 3; i++) {
         getBufferList(i, false)
         bufferList.reverse()
@@ -129,8 +124,10 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
         bufferList.reverse()
         putBufferList(i, false)
     }
-    drawTiles()
-    add1()
+    if (isOptimized) {
+        add1()
+        drawTiles()
+    }
 })
 
 //let i2 = 0
@@ -139,18 +136,42 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
 //let newList: number[] = []
 //let testList: number[] = []
 
-let tilesNumbers: number[] = []
+let tilesNumbers: number[] = [
+    0, 0, 0, 0, 
+    0, 0, 0, 0, 
+    0, 0, 0, 0, 
+    0, 0, 0, 0
+]
+
+let tilesImages: Image[] = [
+    assets.image`tile0`,
+    assets.image`tile1`,
+    assets.image`tile2`,
+    assets.image`tile3`,
+    assets.image`tile4`,
+    assets.image`tile5`,
+    assets.image`tile6`,
+    assets.image`tile7`,
+    assets.image`tile8`,
+    assets.image`tile9`,
+    assets.image`tile10`,
+    assets.image`tile11`
+]
+
 let tilesSprites: Sprite[] = []
-let tilesImages: Image[] = []
+
+for (let index = 0; index < 16; index++) {
+    tilesSprites.push(sprites.create(tilesImages[0], SpriteKind.Tile))
+}
 
 let bufferList: number[] = []
+let isOptimized = false
 let zerosIndexes: number[] = []
 
 let Y_start = 44
 let X_start = 24
 
-tilesNumbers = []
-createTiles()
 add1()
 add1()
+
 drawTiles()
