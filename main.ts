@@ -67,12 +67,7 @@ function drawTiles () {
     }
 }
 function getList (position: number, isRow: boolean) {
-    newList = [
-    0,
-    0,
-    0,
-    0
-    ]
+    newList = [0, 0, 0, 0]
     for (let i1 = 0; i1 <= 3; i1++) {
         if (isRow) {
             newList[i1] = tilesNumbers[position * 4 + i1]
@@ -91,13 +86,32 @@ function putList (position: number, list: number[], isRow: boolean) {
         }
     }
 }
+
+controller.left.onEvent(ControllerButtonEvent.Pressed, function() {
+    for (i2 = 0; i2 <= 3; i2++) {
+        testList = getList(i2, true)
+        testList = optimizeList(testList)
+        putList(i2, testList, true)
+    }
+    drawTiles()
+})
+
+controller.right.onEvent(ControllerButtonEvent.Pressed, function() {
+    for (i2 = 0; i2 <= 3; i2++) {
+        testList = getList(i2, true)
+        
+    }
+})
+
 let Y = 0
 let X = 0
 let tilesSprites: Sprite[] = []
 let tilesImages: Image[] = []
+let i2 = 0
 let i1 = 0
 let i0 = 0
 let newList: number[] = []
+let testList: number[] = []
 let zerosIndexes: number[] = []
 let tilesNumbers: number[] = []
 let Y_start = 0
