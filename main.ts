@@ -90,42 +90,6 @@ function shiftTiles (direction: number) {
     }
 }
 
-/*
-
-function optimizeBufferList () {
-    let i0 = 0
-    let i1 = 1
-    let bufferSnapshot: number[] = []
-    bufferSnapshot = bufferList
-    for (let index = 0; index < 3; index++) {
-        if (bufferList[i0] != 0) {
-            if (bufferList[i1] != 0) {
-                if (bufferList[i0] == bufferList[i1]) {
-                    bufferList[i0] = bufferList[i0] + 1
-                    bufferList.removeAt(i1)
-                    bufferList.push(0)
-                }
-                i0 += 1
-                i1 += 1
-            } else {
-                bufferList.removeAt(i1)
-                bufferList.push(0)
-            }
-        } else {
-            bufferList.removeAt(i0)
-            bufferList.push(0)
-        }
-    }
-    isModified = false
-    for (let i = 0; i < bufferList.length; i++) {
-        if (bufferList[i] != bufferSnapshot[i]) {
-            isModified = true
-        }
-    }
-}
-
-*/
-
 function drawTiles () {
     let x = 0
     let y = 0
@@ -136,31 +100,6 @@ function drawTiles () {
         tilesSprites[i].setPosition(x, y)
     }
 }
-
-/*
-
-function getBufferList (position: number, isRow: boolean) {
-    bufferList = [0, 0, 0, 0]
-    for (let i = 0; i <= 3; i++) {
-        if (isRow) {
-            bufferList[i] = tilesNumbers[position * 4 + i]
-        } else {
-            bufferList[i] = tilesNumbers[i * 4 + position]
-        }
-    }
-}
-
-function putBufferList (position: number, isRow: boolean) {
-    for (let i = 0; i <= 3; i++) {
-        if (isRow) {
-            tilesNumbers[position * 4 + i] = bufferList[i]
-        } else {
-            tilesNumbers[i * 4 + position] = bufferList[i]
-        }
-    }
-}
-
-*/
 
 controller.left.onEvent(ControllerButtonEvent.Pressed, function() {
     shiftTiles(_LEFT)
