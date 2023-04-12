@@ -82,6 +82,15 @@ function getList (position: number, isRow: boolean) {
     }
     return newList
 }
+function putList (position: number, list: number[], isRow: boolean) {
+    for (let i1 = 0; i1 <= 3; i1++) {
+        if (isRow) {
+            tilesNumbers[position * 4 + i1] = list[i1]
+        } else {
+            tilesNumbers[i1 * 4 + position] = list[i1]
+        }
+    }
+}
 let Y = 0
 let X = 0
 let tilesSprites: Sprite[] = []
