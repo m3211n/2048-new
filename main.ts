@@ -1,6 +1,7 @@
 namespace SpriteKind {
     export const Tile = SpriteKind.create()
 }
+
 function add1 () {
     zerosIndexes = []
     for (let n1 = 0; n1 <= tilesNumbers.length - 1; n1++) {
@@ -10,34 +11,34 @@ function add1 () {
     }
     tilesNumbers[zerosIndexes._pickRandom()] = 1
 }
-function optimizeList (list: number[]) {
-    newList = list
+
+function optimizeBufferList () {
     i0 = 0
     i1 = 1
     for (let index = 0; index < 3; index++) {
-        if (newList[i0] != 0) {
-            if (newList[i1] != 0) {
-                if (newList[i0] == newList[i1]) {
-                    newList[i0] = newList[i0] + 1
-                    newList.removeAt(i1)
-                    newList.push(0)
+        if (bufferList[i0] != 0) {
+            if (bufferList[i1] != 0) {
+                if (bufferList[i0] == bufferList[i1]) {
+                    bufferList[i0] = bufferList[i0] + 1
+                    bufferList.removeAt(i1)
+                    bufferList.push(0)
                 }
                 i0 += 1
                 i1 += 1
             } else {
-                newList.removeAt(i1)
-                newList.push(0)
+                bufferList.removeAt(i1)
+                bufferList.push(0)
             }
         } else {
-            newList.removeAt(i0)
-            newList.push(0)
+            bufferList.removeAt(i0)
+            bufferList.push(0)
         }
         console.logValue("i0", i0)
         console.logValue("i1", i1)
-        console.logValue("list", newList)
+        console.logValue("list", bufferList)
     }
-    return newList
 }
+
 function createTiles () {
     tilesImages = [
     assets.image`tile0`,
@@ -66,41 +67,69 @@ function drawTiles () {
         tilesSprites[i0].setPosition(X, Y)
     }
 }
-function getList (position: number, isRow: boolean) {
-    newList = [0, 0, 0, 0]
+function getBufferList (position: number, isRow: boolean) {
+    bufferList = [0, 0, 0, 0]
     for (let i1 = 0; i1 <= 3; i1++) {
         if (isRow) {
-            newList[i1] = tilesNumbers[position * 4 + i1]
+            bufferList[i1] = tilesNumbers[position * 4 + i1]
         } else {
-            newList[i1] = tilesNumbers[i1 * 4 + position]
+            bufferList[i1] = tilesNumbers[i1 * 4 + position]
         }
     }
-    return newList
 }
-function putList (position: number, list: number[], isRow: boolean) {
+
+function putBufferList (position: number, isRow: boolean) {
     for (let i1 = 0; i1 <= 3; i1++) {
         if (isRow) {
-            tilesNumbers[position * 4 + i1] = list[i1]
+            tilesNumbers[position * 4 + i1] = bufferList[i1]
         } else {
-            tilesNumbers[i1 * 4 + position] = list[i1]
+            tilesNumbers[i1 * 4 + position] = bufferList[i1]
         }
     }
 }
 
 controller.left.onEvent(ControllerButtonEvent.Pressed, function() {
     for (i2 = 0; i2 <= 3; i2++) {
-        testList = getList(i2, true)
-        testList = optimizeList(testList)
-        putList(i2, testList, true)
+        getBufferList(i2, true)
+        optimizeBufferList()
+        putBufferList(i2, true)
     }
     drawTiles()
+    add1()
 })
 
 controller.right.onEvent(ControllerButtonEvent.Pressed, function() {
     for (i2 = 0; i2 <= 3; i2++) {
-        testList = getList(i2, true)
-        
+        getBufferList(i2, true)
+        bufferList.reverse()
+        optimizeBufferList()
+        bufferList.reverse()
+        putBufferList(i2, true)
     }
+    drawTiles()
+    add1()
+})
+
+controller.up.onEvent(ControllerButtonEvent.Pressed, function() {
+    for (i2 = 0; i2 <= 3; i2++) {
+        getBufferList(i2, false)
+        optimizeBufferList()
+        putBufferList(i2, false)
+    }
+    drawTiles()
+    add1()
+})
+
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+    for (i2 = 0; i2 <= 3; i2++) {
+        getBufferList(i2, true)
+        bufferList.reverse()
+        optimizeBufferList()
+        bufferList.reverse()
+        putBufferList(i2, true)
+    }
+    drawTiles()
+    add1()
 })
 
 let Y = 0
@@ -112,6 +141,7 @@ let i1 = 0
 let i0 = 0
 let newList: number[] = []
 let testList: number[] = []
+let bufferList: number[] = []
 let zerosIndexes: number[] = []
 let tilesNumbers: number[] = []
 let Y_start = 0
