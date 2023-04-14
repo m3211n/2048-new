@@ -130,11 +130,12 @@ game.onUpdateInterval(500, function() {
                 let i0 = i * 4 + j                          // tagret index
                 let i_right = i0 + 1                        // index of the neighbour to the right
                 let i_down = i0 + 4                         // index of the neighbour to the bottom
-                if ((i_right % 4) != 0 && (i_down <= 15)) { // limiting to the box
-                    if (tilesNumbers[i0] == tilesNumbers[i_right] || tilesNumbers[i0] == tilesNumbers[i_down]) {
-                        possibleMoves = true;
-                    }
-                } 
+                if (i_right % 4 != 0 && tilesNumbers[i0] == tilesNumbers[i_right]) { // limiting to the box
+                    possibleMoves = true
+                }
+                if (i_down <= 15 || tilesNumbers[i0] == tilesNumbers[i_down]) {
+                    possibleMoves = true;
+                }
             }
         }
 
