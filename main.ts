@@ -89,6 +89,33 @@ function shiftTiles (direction: number) {
         add1()
         updateTilesSprites()
     }
+
+    // check game results
+    if (tilesNumbers.indexOf(11) != -1) {                 // WIN if reached 2048
+        game.gameOver(true)
+    }
+
+    if (tilesNumbers.indexOf(0) == -1) {                  // if there's no empty cells
+
+        let possibleMoves = false;
+
+        for (let i = 0; i <= 14; i++) {                                             // find numbers with equal neighbours
+            let i_right = i + 1                                                     // index of the neighbour to the right
+            let i_down = i + 4                                                      // index of the neighbour to the bottom
+            if (i_right % 4 != 0 && tilesNumbers[i] == tilesNumbers[i_right]) {     // limiting to the box
+                possibleMoves = true
+            }
+            if (i_down <= 15 || tilesNumbers[i] == tilesNumbers[i_down]) {
+                possibleMoves = true;
+            }
+        }
+
+        if (!possibleMoves) {
+            game.gameOver(false)
+        }
+
+    }
+
 }
 
 function updateTilesSprites () {
@@ -113,38 +140,6 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function() {
 
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     shiftTiles(_DOWN)
-})
-
-game.onUpdateInterval(500, function() {
-
-    if (tilesNumbers.indexOf(11) != -1) {                 // WIN if reached 2048
-        game.gameOver(true) 
-    }
-
-    if (tilesNumbers.indexOf(0) == -1) {                  // if there's no empty cells
-        
-        let possibleMoves = false;
-        
-        for (let i = 0; i <= 3; i++) {                      // find numbers with equal neighbours
-            for (let j = 0; j <= 3; j++) {
-                let i0 = i * 4 + j                          // tagret index
-                let i_right = i0 + 1                        // index of the neighbour to the right
-                let i_down = i0 + 4                         // index of the neighbour to the bottom
-                if (i_right % 4 != 0 && tilesNumbers[i0] == tilesNumbers[i_right]) { // limiting to the box
-                    possibleMoves = true
-                }
-                if (i_down <= 15 || tilesNumbers[i0] == tilesNumbers[i_down]) {
-                    possibleMoves = true;
-                }
-            }
-        }
-
-        if (!possibleMoves) {
-            game.gameOver(false)
-        }
-
-    }
-    
 })
 
 const _UP = 0                // direction constants
