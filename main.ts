@@ -105,12 +105,13 @@ function shiftTiles (direction: number) {
             if (i_right % 4 != 0 && tilesNumbers[i] == tilesNumbers[i_right]) {     // limiting to the box
                 possibleMoves = true
             }
-            if (i_down <= 15 || tilesNumbers[i] == tilesNumbers[i_down]) {
+            if (i_down <= 15 && tilesNumbers[i] == tilesNumbers[i_down]) {
                 possibleMoves = true;
             }
         }
 
         if (!possibleMoves) {
+            game.waitAnyButton()
             game.gameOver(false)
         }
 
